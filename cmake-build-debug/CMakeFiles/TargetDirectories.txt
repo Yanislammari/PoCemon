@@ -1,0 +1,3 @@
+/Users/yanislammari/CLionProjects/pocemon/cmake-build-debug/CMakeFiles/pocemon.dir
+/Users/yanislammari/CLionProjects/pocemon/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/yanislammari/CLionProjects/pocemon/cmake-build-debug/CMakeFiles/rebuild_cache.dir

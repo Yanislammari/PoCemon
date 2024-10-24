@@ -1,0 +1,22 @@
+# ninja log v5
+372	430	1729293397842711823	CMakeFiles/pocemon.dir/src/database.c.o	d308f2598e811eff
+2	445	1729293397858322969	CMakeFiles/pocemon.dir/src/screen.c.o	16ba399c95f40da
+370	492	1729293397908321477	CMakeFiles/pocemon.dir/src/character.c.o	b8b991f7c535f01e
+1	43	1729778825608238882	build.ninja	205209bc8b513cf3
+2	445	1729293397858886133	CMakeFiles/pocemon.dir/src/text.c.o	d5f0a977caad071f
+3	371	1729293397783654643	CMakeFiles/pocemon.dir/src/gif.c.o	84e1e00cd85f24c9
+2	455	1729293397870218879	CMakeFiles/pocemon.dir/src/game.c.o	9a61584d8ecc22a4
+430	474	1729293397890615464	CMakeFiles/pocemon.dir/src/pokemon.c.o	86a821a42b41849f
+492	692	1729293398106362767	pocemon	9ae6a57e013f458f
+0	369	1729293397783682060	CMakeFiles/pocemon.dir/main.c.o	a2b3c29c55fe23cf
+3	447	1729293397861982079	CMakeFiles/pocemon.dir/src/map.c.o	d0da71d1dc2bce51
+11	79	1729778825608238882	build.ninja	205209bc8b513cf3
+1	257	1729778825867304787	CMakeFiles/pocemon.dir/src/database.c.o	d308f2598e811eff
+1	258	1729778825867279162	CMakeFiles/pocemon.dir/src/pokemon.c.o	86a821a42b41849f
+1	258	1729778825867279662	CMakeFiles/pocemon.dir/src/gif.c.o	84e1e00cd85f24c9
+258	278	1729778825891107034	CMakeFiles/pocemon.dir/main.c.o	a2b3c29c55fe23cf
+2	295	1729778825907563875	CMakeFiles/pocemon.dir/src/text.c.o	d5f0a977caad071f
+1	297	1729778825910082232	CMakeFiles/pocemon.dir/src/character.c.o	b8b991f7c535f01e
+2	304	1729778825917134849	CMakeFiles/pocemon.dir/src/game.c.o	9a61584d8ecc22a4
+257	332	1729778825945518563	CMakeFiles/pocemon.dir/src/screen.c.o	16ba399c95f40da
+332	582	1729778826192814635	pocemon	9ae6a57e013f458f
