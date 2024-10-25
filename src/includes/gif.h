@@ -10,6 +10,6 @@ typedef struct {
     GifByteType* data;
 } Gif;
 
-Gif* load_gif_frames(const char* filename, int* frameCount);
+Gif* load_gif_frames(char* filename, int* frameCount);
 
 #endif

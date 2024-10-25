@@ -2,11 +2,11 @@
 #include "includes/gif.h"
 #include "includes/screen.h"
 
-Screen initializeScreen(SDL_Renderer* renderer, const char* imagePath) {
+Screen initialize_screen(SDL_Renderer* renderer, char* imagePath) {
     Screen screen;
     int frame_count;
     Gif* gif_frames = load_gif_frames(imagePath, &frame_count);
-    screen.frames = (SDL_Texture**)malloc(frame_count * sizeof(SDL_Texture*));
+    screen.frames = (SDL_Texture**) malloc(frame_count * sizeof(SDL_Texture*));
     screen.frame_count = frame_count;
     screen.current_frame = 0;
     screen.frame_delay = gif_frames[0].delayTime;
@@ -33,12 +33,14 @@ Screen initializeScreen(SDL_Renderer* renderer, const char* imagePath) {
     return screen;
 }
 
-void displayScreen(SDL_Renderer* renderer, Screen* screen) {
+void display_screen(SDL_Renderer* renderer, Screen* screen) {
     Uint32 current_time = SDL_GetTicks();
+
     if(current_time - screen->last_update_time >= screen->frame_delay) {
         screen->current_frame = (screen->current_frame + 1) % screen->frame_count;
         screen->last_update_time = current_time;
     }
+
     SDL_RenderClear(renderer);
     SDL_Texture* current_texture = screen->frames[screen->current_frame];
     if(current_texture) {
@@ -46,13 +48,13 @@ void displayScreen(SDL_Renderer* renderer, Screen* screen) {
     }
 }
 
-void removeScreen(Screen screen) {
+void remove_screen(Screen screen) {
     for(int i = 0; i < screen.frame_count; i++) {
         SDL_DestroyTexture(screen.frames[i]);
     }
     free(screen.frames);
 }
 
-void fullScreenWindow(SDL_Window* window) {
+void full_screen_window(SDL_Window* window) {
     SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 }

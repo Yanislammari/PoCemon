@@ -2,20 +2,20 @@
 #include <gif_lib.h>
 #include "includes/gif.h"
 
-Gif* load_gif_frames(const char* filename, int* frameCount) {
+Gif* load_gif_frames(char* filename, int* frameCount) {
     GifFileType* gifFile;
     int error;
     Gif* frames = NULL;
     int frame_index = 0;
     gifFile = DGifOpenFileName(filename, &error);
 
-    if(DGifSlurp(gifFile) == GIF_ERROR){
+    if(DGifSlurp(gifFile) == GIF_ERROR) {
         DGifCloseFile(gifFile, &error);
         return NULL;
     }
 
     *frameCount = gifFile->ImageCount;
-    frames = (Gif*)malloc(*frameCount * sizeof(Gif));
+    frames = (Gif*) malloc(*frameCount * sizeof(Gif));
 
     for(int i = 0; i < *frameCount; i++) {
         SavedImage* image = &gifFile->SavedImages[i];
@@ -32,7 +32,7 @@ Gif* load_gif_frames(const char* filename, int* frameCount) {
         }
 
         ColorMapObject* colorMap = image->ImageDesc.ColorMap ? image->ImageDesc.ColorMap : gifFile->SColorMap;
-        frame->data = (GifByteType*)malloc(frame->width * frame->height * 3 * sizeof(GifByteType));
+        frame->data = (GifByteType*) malloc(frame->width * frame->height * 3 * sizeof(GifByteType));
 
         for(int j = 0; j < frame->width * frame->height; j++) {
             int colorIndex = image->RasterBits[j];

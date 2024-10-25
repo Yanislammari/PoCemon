@@ -6,7 +6,7 @@ void run_game() {
     SDL_Window* window = SDL_CreateWindow("PoCemon", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-    Screen homeScreen = initializeScreen(renderer, "../assets/screen/home_screen.gif");
+    Screen homeScreen = initialize_screen(renderer, "../assets/screen/home_screen.gif");
     enum GameState gameState = STATE_HOME;
 
     int quit = 0;
@@ -19,18 +19,18 @@ void run_game() {
             }
             else if(e.type == SDL_KEYDOWN) {
                 if(e.key.keysym.sym == SDLK_f) {
-                    fullScreenWindow(window);
+                    full_screen_window(window);
                 }
             }
         }
 
         SDL_RenderClear(renderer);
         if(gameState == STATE_HOME) {
-            displayScreen(renderer, &homeScreen);
+            display_screen(renderer, &homeScreen);
         }
     }
 
-    removeScreen(homeScreen);
+    remove_screen(homeScreen);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 }
