@@ -9,7 +9,7 @@ typedef struct {
     Uint32 last_update_time;
 } Screen;
 
-Screen initialize_screen(SDL_Renderer* renderer, char* imagePath);
+Screen initialize_screen(SDL_Renderer* renderer, char* image_path);
 void display_screen(SDL_Renderer* renderer, Screen* screen);
 void remove_screen(Screen screen);
 void full_screen_window(SDL_Window* window);

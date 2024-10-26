@@ -2,14 +2,14 @@
 #include "includes/gif.h"
 #include "includes/screen.h"
 
-Screen initialize_screen(SDL_Renderer* renderer, char* imagePath) {
+Screen initialize_screen(SDL_Renderer* renderer, char* image_path) {
     Screen screen;
     int frame_count;
-    Gif* gif_frames = load_gif_frames(imagePath, &frame_count);
+    Gif* gif_frames = load_gif_frames(image_path, &frame_count);
     screen.frames = (SDL_Texture**) malloc(frame_count * sizeof(SDL_Texture*));
     screen.frame_count = frame_count;
     screen.current_frame = 0;
-    screen.frame_delay = gif_frames[0].delayTime;
+    screen.frame_delay = gif_frames[0].delay_time;
     screen.last_update_time = SDL_GetTicks();
 
     for(int i = 0; i < frame_count; i++) {

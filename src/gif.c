@@ -2,41 +2,36 @@
 #include <gif_lib.h>
 #include "includes/gif.h"
 
-Gif* load_gif_frames(char* filename, int* frameCount) {
-    GifFileType* gifFile;
+Gif* load_gif_frames(char* filename, int* frame_count) {
+    GifFileType* gif_file;
     int error;
     Gif* frames = NULL;
     int frame_index = 0;
-    gifFile = DGifOpenFileName(filename, &error);
+    gif_file = DGifOpenFileName(filename, &error);
+    DGifSlurp(gif_file);
+    *frame_count = gif_file->ImageCount;
+    frames = (Gif*) malloc(*frame_count * sizeof(Gif));
 
-    if(DGifSlurp(gifFile) == GIF_ERROR) {
-        DGifCloseFile(gifFile, &error);
-        return NULL;
-    }
-
-    *frameCount = gifFile->ImageCount;
-    frames = (Gif*) malloc(*frameCount * sizeof(Gif));
-
-    for(int i = 0; i < *frameCount; i++) {
-        SavedImage* image = &gifFile->SavedImages[i];
+    for(int i = 0; i < *frame_count; i++) {
+        SavedImage* image = &gif_file->SavedImages[i];
         Gif* frame = &frames[frame_index];
-        frame->width = gifFile->SWidth;
-        frame->height = gifFile->SHeight;
+        frame->width = gif_file->SWidth;
+        frame->height = gif_file->SHeight;
         GraphicsControlBlock gcb;
 
-        if(DGifSavedExtensionToGCB(gifFile, i, &gcb) == GIF_OK) {
-            frame->delayTime = gcb.DelayTime * 10;
+        if(DGifSavedExtensionToGCB(gif_file, i, &gcb) == GIF_OK) {
+            frame->delay_time = gcb.DelayTime * 10;
         }
         else {
-            frame->delayTime = 0;
+            frame->delay_time = 0;
         }
 
-        ColorMapObject* colorMap = image->ImageDesc.ColorMap ? image->ImageDesc.ColorMap : gifFile->SColorMap;
+        ColorMapObject* color_map = image->ImageDesc.ColorMap ? image->ImageDesc.ColorMap : gif_file->SColorMap;
         frame->data = (GifByteType*) malloc(frame->width * frame->height * 3 * sizeof(GifByteType));
 
         for(int j = 0; j < frame->width * frame->height; j++) {
-            int colorIndex = image->RasterBits[j];
-            GifColorType color = colorMap->Colors[colorIndex];
+            int color_index = image->RasterBits[j];
+            GifColorType color = color_map->Colors[color_index];
             frame->data[j * 3] = color.Red;
             frame->data[j * 3 + 1] = color.Green;
             frame->data[j * 3 + 2] = color.Blue;
@@ -44,6 +39,6 @@ Gif* load_gif_frames(char* filename, int* frameCount) {
         frame_index++;
     }
 
-    DGifCloseFile(gifFile, &error);
+    DGifCloseFile(gif_file, &error);
     return frames;
 }

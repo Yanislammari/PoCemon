@@ -6,12 +6,12 @@ void run_game() {
     SDL_Window* window = SDL_CreateWindow("PoCemon", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-    Screen homeScreen = initialize_screen(renderer, "../assets/screen/home_screen.gif");
-    enum GameState gameState = STATE_HOME;
+    Screen home_screen = initialize_screen(renderer, "../assets/screen/home_screen.gif");
+    enum GameState game_state = STATE_HOME;
 
     int quit = 0;
     SDL_Event e;
-    Screen menuScreen;
+    Screen menu_screen;
     Screen savelist_screen;
 
     while(!quit) {
@@ -23,33 +23,33 @@ void run_game() {
                 if(e.key.keysym.sym == SDLK_f) {
                     full_screen_window(window);
                 }
-                if(gameState == STATE_HOME) {
+                if(game_state == STATE_HOME) {
                     if(e.key.keysym.sym == SDLK_RETURN) {
-                        remove_screen(homeScreen);
-                        menuScreen = initialize_screen(renderer, "../assets/screen/menu_screen.gif");
-                        gameState = STATE_MENU;
+                        remove_screen(home_screen);
+                        menu_screen = initialize_screen(renderer, "../assets/screen/menu_screen.gif");
+                        game_state = STATE_MENU;
                     }
                 }
-                else if(gameState == STATE_MENU) {
+                else if(game_state == STATE_MENU) {
                     if(e.key.keysym.sym == SDLK_RETURN) {
-                        remove_screen(menuScreen);
+                        remove_screen(menu_screen);
                         savelist_screen = initialize_screen(renderer, "../assets/screen/savelist_screen.gif");
-                        gameState = STATE_SAVELIST;
+                        game_state = STATE_SAVELIST;
                     }
                 }
             }
         }
 
         SDL_RenderClear(renderer);
-        if(gameState == STATE_HOME) {
-            display_screen(renderer, &homeScreen);
+        if(game_state == STATE_HOME) {
+            display_screen(renderer, &home_screen);
         }
-        else if(gameState == STATE_MENU) {
-            display_screen(renderer, &menuScreen);
+        else if(game_state == STATE_MENU) {
+            display_screen(renderer, &menu_screen);
         }
     }
 
-    remove_screen(homeScreen);
+    remove_screen(home_screen);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 }
