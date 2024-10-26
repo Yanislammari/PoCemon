@@ -11,6 +11,8 @@ void run_game() {
 
     int quit = 0;
     SDL_Event e;
+    Screen menuScreen;
+    Screen savelist_screen;
 
     while(!quit) {
         while(SDL_PollEvent(&e) != 0) {
@@ -21,12 +23,29 @@ void run_game() {
                 if(e.key.keysym.sym == SDLK_f) {
                     full_screen_window(window);
                 }
+                if(gameState == STATE_HOME) {
+                    if(e.key.keysym.sym == SDLK_RETURN) {
+                        remove_screen(homeScreen);
+                        menuScreen = initialize_screen(renderer, "../assets/screen/menu_screen.gif");
+                        gameState = STATE_MENU;
+                    }
+                }
+                else if(gameState == STATE_MENU) {
+                    if(e.key.keysym.sym == SDLK_RETURN) {
+                        remove_screen(menuScreen);
+                        savelist_screen = initialize_screen(renderer, "../assets/screen/savelist_screen.gif");
+                        gameState = STATE_SAVELIST;
+                    }
+                }
             }
         }
 
         SDL_RenderClear(renderer);
         if(gameState == STATE_HOME) {
             display_screen(renderer, &homeScreen);
+        }
+        else if(gameState == STATE_MENU) {
+            display_screen(renderer, &menuScreen);
         }
     }
 
