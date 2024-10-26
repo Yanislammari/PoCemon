@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-enum GameState{
+enum GameState {
     STATE_HOME,
     STATE_MENU,
     STATE_SAVELIST,

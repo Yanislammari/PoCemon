@@ -6,10 +6,11 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
+find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(GIF REQUIRED)
 
-include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS} ${GIF_INCLUDE_DIRS} /usr/local/include)
+include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS} ${GIF_INCLUDE_DIRS} /usr/local/include)
 
 find_library(SDL2_MIXER_LIB NAMES SDL2_mixer PATHS /opt/homebrew/lib)
 if(NOT SDL2_MIXER_LIB)
@@ -24,6 +25,8 @@ add_executable(pocemon
         src/includes/screen.h
         src/gif.c
         src/includes/gif.h
+        src/text.c
+        src/includes/text.h
 )
 
-target_link_libraries(pocemon ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIB} ${GIF_LIBRARIES})
+target_link_libraries(pocemon ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIB} ${GIF_LIBRARIES})
