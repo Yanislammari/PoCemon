@@ -101,7 +101,25 @@ void run_game() {
             render_text(renderer, font, "Charger Partie", menu_selected_option == 1 ? BLUE_COLOR : WHITE_COLOR, load_game_option_position_x, load_game_option_position_y);
         }
         else if(game_state == STATE_GAME && map_texture) {
-            //TODO: init player and camera
+            int camera_x = player.x + player.width / 2 - WINDOW_WIDTH / 2;
+            int camera_y = player.y + player.height / 2 - WINDOW_HEIGHT / 2;
+            if(camera_x < 0) {
+                camera_x = 0;
+            }
+            if(camera_y < 0) {
+                camera_y = 0;
+            }
+            if(camera_x > map->width * map->tile_width - WINDOW_WIDTH) {
+                camera_x = map->width * map->tile_width - WINDOW_WIDTH;
+            }
+            if(camera_y > map->height * map->tile_height - WINDOW_HEIGHT) {
+                camera_y = map->height * map->tile_height - WINDOW_HEIGHT;
+            }
+            SDL_Rect camera_rect = {camera_x, camera_y, WINDOW_WIDTH, WINDOW_HEIGHT };
+            SDL_RenderCopy(renderer, map_texture, &camera_rect, NULL);
+            render_character(renderer, &player, camera_x, camera_y);
+            SDL_Rect player_rect = {player.x - camera_x, player.y - camera_y, player.width, player.height };
+            SDL_RenderCopy(renderer, player.sprite, NULL, &player_rect);
         }
 
         SDL_RenderPresent(renderer);
