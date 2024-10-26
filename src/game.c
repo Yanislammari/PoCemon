@@ -86,6 +86,9 @@ void run_game() {
         else if(game_state == STATE_GAME && map_texture) {
             //TODO: init player and camera
         }
+
+        SDL_RenderPresent(renderer);
+        SDL_Delay(16);
     }
 
     if(map_texture) {
