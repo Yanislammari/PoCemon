@@ -27,6 +27,13 @@ add_executable(pocemon
         src/includes/gif.h
         src/text.c
         src/includes/text.h
+        src/map.c
+        src/includes/map.h
 )
 
-target_link_libraries(pocemon ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIB} ${GIF_LIBRARIES})
+find_library(TMX_LIB NAMES tmx PATHS /usr/local/lib)
+if(NOT TMX_LIB)
+    message(FATAL_ERROR "tmx library not found")
+endif()
+
+target_link_libraries(pocemon ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIB} ${GIF_LIBRARIES} ${TMX_LIB})

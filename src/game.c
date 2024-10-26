@@ -1,8 +1,10 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <tmx.h>
 #include "includes/screen.h"
 #include "includes/game.h"
 #include "includes/text.h"
+#include "includes/map.h"
 
 void run_game() {
     TTF_Init();
@@ -22,6 +24,7 @@ void run_game() {
     SDL_Color WHITE_COLOR = {255, 255, 255};
     SDL_Color BLACK_COLOR = {0, 0, 0};
     SDL_Color BLUE_COLOR = {0, 0, 255};
+    tmx_map* map = NULL;
     SDL_Texture* map_texture = NULL;
 
     int WINDOW_WIDTH = 800;
@@ -52,6 +55,8 @@ void run_game() {
                         }
                         else if(menu_selected_option == 0) {
                             remove_screen(menu_screen);
+                            map = tmx_load("../assets/map/map_main/map.tmx");
+                            map_texture = render_map_to_texture(renderer, map);
                             game_state = STATE_GAME;
                         }
                     }
@@ -78,6 +83,13 @@ void run_game() {
             render_text(renderer, font, "Nouvelle partie", menu_selected_option == 0 ? BLUE_COLOR : WHITE_COLOR, new_game_option_position_x, new_game_option_position_y);
             render_text(renderer, font, "Charger Partie", menu_selected_option == 1 ? BLUE_COLOR : WHITE_COLOR, load_game_option_position_x, load_game_option_position_y);
         }
+        else if(game_state == STATE_GAME && map_texture) {
+            //TODO: init player and camera
+        }
+    }
+
+    if(map_texture) {
+        SDL_DestroyTexture(map_texture);
     }
 
     remove_screen(home_screen);
