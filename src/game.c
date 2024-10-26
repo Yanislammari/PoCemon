@@ -5,6 +5,7 @@
 #include "includes/game.h"
 #include "includes/text.h"
 #include "includes/map.h"
+#include "includes/character.h"
 
 void run_game() {
     TTF_Init();
@@ -26,6 +27,7 @@ void run_game() {
     SDL_Color BLUE_COLOR = {0, 0, 255};
     tmx_map* map = NULL;
     SDL_Texture* map_texture = NULL;
+    Character player;
 
     int WINDOW_WIDTH = 800;
     int WINDOW_HEIGHT = 600;
@@ -62,6 +64,21 @@ void run_game() {
                     }
                     else if(e.key.keysym.sym == SDLK_DOWN || e.key.keysym.sym == SDLK_UP) {
                         menu_selected_option = 1 - menu_selected_option;
+                    }
+                }
+                else if(game_state == STATE_GAME) {
+                    int speed = 10;
+                    if(e.key.keysym.sym == SDLK_LEFT) {
+                        player.x -= speed;
+                    }
+                    else if(e.key.keysym.sym == SDLK_RIGHT) {
+                        player.x += speed;
+                    }
+                    else if(e.key.keysym.sym == SDLK_UP) {
+                        player.y -= speed;
+                    }
+                    else if(e.key.keysym.sym == SDLK_DOWN) {
+                        player.y += speed;
                     }
                 }
             }
