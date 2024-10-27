@@ -21,17 +21,26 @@ void draw_health_bar(SDL_Renderer* renderer, int x, int y, int width, int height
 }
 
 void run_game() {
+    TTF_Init();
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+
     SDL_Window* window = SDL_CreateWindow("PoCemon", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     TTF_Font* font = TTF_OpenFont("../assets/font/Daydream.ttf", 24);
 
-    TTF_Init();
+    Mix_Music* home_screen_background_music;
+    Mix_Music* menu_screen_background_music;
+    Mix_Music* game_screen_background_music;
+    Mix_Music* battle_screen_background_music;
 
-    int pokemon_count = 0;
-    Pokemon* pokemons = get_pokemons(&pokemon_count);
+    home_screen_background_music = Mix_LoadMUS("../assets/sound/music/home_screen_music.mp3");
+    Mix_PlayMusic(home_screen_background_music, -1);
 
     Screen home_screen = initialize_screen(renderer, "../assets/screen/home_screen.gif");
     enum GameState game_state = STATE_HOME;
+
+    int pokemon_count = 0;
+    Pokemon* pokemons = get_pokemons(&pokemon_count);
 
     int quit = 0;
     SDL_Event e;
@@ -65,6 +74,9 @@ void run_game() {
                 if(game_state == STATE_HOME) {
                     if(e.key.keysym.sym == SDLK_RETURN) {
                         remove_screen(home_screen);
+                        Mix_FreeMusic(home_screen_background_music);
+                        menu_screen_background_music = Mix_LoadMUS("../assets/sound/music/menu_screen_music.mp3");
+                        Mix_PlayMusic(menu_screen_background_music, -1);
                         menu_screen = initialize_screen(renderer, "../assets/screen/menu_screen.gif");
                         game_state = STATE_MENU;
                     }
@@ -78,6 +90,9 @@ void run_game() {
                         }
                         else if(menu_selected_option == 0) {
                             remove_screen(menu_screen);
+                            Mix_FreeMusic(menu_screen_background_music);
+                            game_screen_background_music = Mix_LoadMUS("../assets/sound/music/game_screen_music.mp3");
+                            Mix_PlayMusic(game_screen_background_music, -1);
                             map = tmx_load("../assets/map/map_main/map.tmx");
                             map_texture = render_map_to_texture(renderer, map);
                             player = init_character(renderer, "../assets/sprite/sprite.png", 300, 300);
@@ -107,6 +122,9 @@ void run_game() {
                         wild_pokemon = pokemons[random_index];
                         wild_pokemon.current_pv = wild_pokemon.total_pv;
                         wild_pokemon_texture = load_character_sprite(wild_pokemon.sprite, renderer);
+                        Mix_FreeMusic(game_screen_background_music);
+                        battle_screen_background_music = Mix_LoadMUS("../assets/sound/music/battle_screen_music.mp3");
+                        Mix_PlayMusic(battle_screen_background_music, -1);
                         game_state = STATE_BATTLE;
                     }
                 }
@@ -124,6 +142,9 @@ void run_game() {
                                 player.squad[0].current_pv -= wild_pokemon.atk - player.squad[0].def;
                                 if(wild_pokemon.current_pv < 0){
                                     wild_pokemon.current_pv = 0;
+                                    Mix_FreeMusic(battle_screen_background_music);
+                                    game_screen_background_music = Mix_LoadMUS("../assets/sound/music/game_screen_music.mp3");
+                                    Mix_PlayMusic(game_screen_background_music, -1);
                                     game_state = STATE_GAME;
                                     break;
                                 }
@@ -133,6 +154,9 @@ void run_game() {
                             case 2:  // TODO: SWITCH POKEMON LOGIC
                                 break;
                             case 3:
+                                Mix_FreeMusic(battle_screen_background_music);
+                                game_screen_background_music = Mix_LoadMUS("../assets/sound/music/game_screen_music.mp3");
+                                Mix_PlayMusic(game_screen_background_music, -1);
                                 game_state = STATE_GAME;
                                 break;
                             default:
