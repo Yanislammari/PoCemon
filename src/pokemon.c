@@ -7,11 +7,11 @@ Pokemon* get_pokemons(int* count) {
     sqlite3* db = init_database();
     char* sql = "SELECT id, nom, pv, atk, def, vitesse, type, sprite FROM Pokemon";
     sqlite3_stmt* stmt;
-    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
     Pokemon* pokemons = malloc(sizeof(Pokemon) * 100);
     int index = 0;
 
-    while((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+    while((sqlite3_step(stmt)) == SQLITE_ROW) {
         int id = sqlite3_column_int(stmt, 0);
         char* nom = (char*) sqlite3_column_text(stmt, 1);
         int pv = sqlite3_column_int(stmt, 2);

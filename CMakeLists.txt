@@ -16,7 +16,10 @@ include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_IN
 find_library(SDL2_MIXER_LIB NAMES SDL2_mixer PATHS /opt/homebrew/lib)
 find_library(TMX_LIB NAMES tmx PATHS /usr/local/lib)
 
-add_executable(pocemon main.c src/screen.c
+add_executable(
+        pocemon
+        main.c
+        src/screen.c
         src/game.c
         src/includes/game.h
         src/includes/screen.h

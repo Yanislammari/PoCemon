@@ -24,7 +24,7 @@ void run_game() {
     TTF_Init();
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
-    SDL_Window* window = SDL_CreateWindow("PoCemon", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow("PoCemon", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     TTF_Font* font = TTF_OpenFont("../assets/font/Daydream.ttf", 24);
 
@@ -48,9 +48,6 @@ void run_game() {
     Screen savelist_screen;
     int menu_selected_option = 0;
     int battle_selected_option = 0;
-    SDL_Color WHITE_COLOR = {255, 255, 255};
-    SDL_Color BLACK_COLOR = {0, 0, 0};
-    SDL_Color BLUE_COLOR = {0, 0, 255};
     tmx_map* map = NULL;
     SDL_Texture* map_texture = NULL;
     Character player;
@@ -58,9 +55,6 @@ void run_game() {
     SDL_Texture* wild_pokemon_texture = NULL;
 
     srand(time(NULL));
-
-    int WINDOW_WIDTH = 800;
-    int WINDOW_HEIGHT = 600;
 
     while(!quit) {
         while(SDL_PollEvent(&e) != 0) {
@@ -201,7 +195,7 @@ void run_game() {
             SDL_Rect camera_rect = {camera_x, camera_y, WINDOW_WIDTH, WINDOW_HEIGHT };
             SDL_RenderCopy(renderer, map_texture, &camera_rect, NULL);
             render_character(renderer, &player, camera_x, camera_y);
-            SDL_Rect player_rect = {player.x - camera_x, player.y - camera_y, player.width, player.height };
+            SDL_Rect player_rect = {player.x - camera_x, player.y - camera_y, player.width, player.height};
             SDL_RenderCopy(renderer, player.sprite, NULL, &player_rect);
         }
         else if(game_state == STATE_BATTLE) {
@@ -242,6 +236,5 @@ void run_game() {
     TTF_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-
     free_pokemons(pokemons, pokemon_count);
 }
