@@ -4,25 +4,17 @@ project(pocemon C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
-# Chemin personnalisé pour SDL2, probablement nécessaire pour votre configuration macOS
-set(SDL2_PATH "/Users/yanislammari/Documents/SDL2-2.30.1/x86_64-w64-mingw32") # pas obligé
-
-# Trouver les packages nécessaires
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(GIF REQUIRED)
-find_package(SQLite3 REQUIRED)  # Recherche SQLite3
+find_package(SQLite3 REQUIRED)
 
-# Ajouter les répertoires d'include
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS} ${GIF_INCLUDE_DIRS} /usr/local/include)
 
-# Manuellement trouver la bibliothèque SDL2_mixer si nécessaire
 find_library(SDL2_MIXER_LIB NAMES SDL2_mixer PATHS /opt/homebrew/lib)
-if(NOT SDL2_MIXER_LIB)
-    message(FATAL_ERROR "SDL2_mixer library not found")
-endif()
+find_library(TMX_LIB NAMES tmx PATHS /usr/local/lib)
 
 add_executable(pocemon main.c src/screen.c
         src/game.c
@@ -41,11 +33,5 @@ add_executable(pocemon main.c src/screen.c
         src/pokemon.c
         src/includes/pokemon.h
 )
-
-# Trouver la bibliothèque tmx
-find_library(TMX_LIB NAMES tmx PATHS /usr/local/lib)
-if(NOT TMX_LIB)
-    message(FATAL_ERROR "tmx library not found")
-endif()
 
 target_link_libraries(pocemon ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIB} ${GIF_LIBRARIES} ${TMX_LIB} SQLite::SQLite3)
