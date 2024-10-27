@@ -6,17 +6,8 @@
 
 SDL_Texture* load_character_sprite(char* filename, SDL_Renderer* renderer) {
     SDL_Surface* surface = IMG_Load(filename);
-    if(!surface) {
-        fprintf(stderr, "Unable to load image %s: %s\n", filename, IMG_GetError());
-        return NULL;
-    }
-
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
-    if(!texture) {
-        fprintf(stderr, "Unable to create texture from %s: %s\n", filename, SDL_GetError());
-    }
-
     return texture;
 }
 

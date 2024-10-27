@@ -3,12 +3,13 @@
 
 #include "pokemon.h"
 
-typedef struct{
+typedef struct {
     SDL_Texture* sprite;
     int x;
     int y;
     int width;
     int height;
+    Pokemon* squad;
 } Character;
 
 SDL_Texture* load_character_sprite(char* filename, SDL_Renderer* renderer);
