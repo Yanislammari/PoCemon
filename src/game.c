@@ -138,7 +138,7 @@ void run_game() {
                     else if(e.key.keysym.sym == SDLK_RETURN) {
                         switch(battle_selected_option) {
                             case 0:
-                                wild_pokemon.current_pv -= player.squad[0].atk - wild_pokemon.def;  // Réduit les PV actuels du Pokémon sauvage
+                                wild_pokemon.current_pv -= player.squad[0].atk - wild_pokemon.def;
                                 player.squad[0].current_pv -= wild_pokemon.atk - player.squad[0].def;
                                 if(wild_pokemon.current_pv < 0){
                                     wild_pokemon.current_pv = 0;
