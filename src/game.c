@@ -1,18 +1,34 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include <tmx.h>
+#include <stdlib.h>
+#include <time.h>
 #include "includes/screen.h"
-#include "includes/game.h"
 #include "includes/text.h"
 #include "includes/map.h"
 #include "includes/character.h"
+#include "includes/game.h"
+#include "includes/pokemon.h"
+
+void draw_health_bar(SDL_Renderer* renderer, int x, int y, int width, int height, float percent) {
+    SDL_SetRenderDrawColor(renderer, 169, 169, 169, 255);
+    SDL_Rect background_bar = {x, y, width, height };
+    SDL_RenderFillRect(renderer, &background_bar);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_Rect health_bar = {x, y, (int) (width * percent), height};
+    SDL_RenderFillRect(renderer, &health_bar);
+}
 
 void run_game() {
-    TTF_Init();
-
     SDL_Window* window = SDL_CreateWindow("PoCemon", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     TTF_Font* font = TTF_OpenFont("../assets/font/Daydream.ttf", 24);
+
+    TTF_Init();
+
+    int pokemon_count = 0;
+    Pokemon* pokemons = get_pokemons(&pokemon_count);
 
     Screen home_screen = initialize_screen(renderer, "../assets/screen/home_screen.gif");
     enum GameState game_state = STATE_HOME;
@@ -22,12 +38,17 @@ void run_game() {
     Screen menu_screen;
     Screen savelist_screen;
     int menu_selected_option = 0;
+    int battle_selected_option = 0;
     SDL_Color WHITE_COLOR = {255, 255, 255};
     SDL_Color BLACK_COLOR = {0, 0, 0};
     SDL_Color BLUE_COLOR = {0, 0, 255};
     tmx_map* map = NULL;
     SDL_Texture* map_texture = NULL;
     Character player;
+    Pokemon wild_pokemon;
+    SDL_Texture* wild_pokemon_texture = NULL;
+
+    srand(time(NULL));
 
     int WINDOW_WIDTH = 800;
     int WINDOW_HEIGHT = 600;
@@ -59,6 +80,7 @@ void run_game() {
                             remove_screen(menu_screen);
                             map = tmx_load("../assets/map/map_main/map.tmx");
                             map_texture = render_map_to_texture(renderer, map);
+                            player = init_character(renderer, "../assets/sprite/sprite.png", 300, 300);
                             game_state = STATE_GAME;
                         }
                     }
@@ -79,6 +101,43 @@ void run_game() {
                     }
                     else if(e.key.keysym.sym == SDLK_DOWN) {
                         player.y += speed;
+                    }
+                    if(rand() % 100 == 0) {
+                        int random_index = rand() % pokemon_count;
+                        wild_pokemon = pokemons[random_index];
+                        wild_pokemon.current_pv = wild_pokemon.total_pv;
+                        wild_pokemon_texture = load_character_sprite(wild_pokemon.sprite, renderer);
+                        game_state = STATE_BATTLE;
+                    }
+                }
+                else if(game_state == STATE_BATTLE) {
+                    if(e.key.keysym.sym == SDLK_DOWN) {
+                        battle_selected_option = (battle_selected_option + 1) % 4;
+                    }
+                    else if(e.key.keysym.sym == SDLK_UP) {
+                        battle_selected_option = (battle_selected_option - 1 + 4) % 4;
+                    }
+                    else if(e.key.keysym.sym == SDLK_RETURN) {
+                        switch(battle_selected_option) {
+                            case 0:
+                                wild_pokemon.current_pv -= player.squad[0].atk - wild_pokemon.def;  // Réduit les PV actuels du Pokémon sauvage
+                                player.squad[0].current_pv -= wild_pokemon.atk - player.squad[0].def;
+                                if(wild_pokemon.current_pv < 0){
+                                    wild_pokemon.current_pv = 0;
+                                    game_state = STATE_GAME;
+                                    break;
+                                }
+                                break;
+                            case 1:  // TODO: BAG LOGIC
+                                break;
+                            case 2:  // TODO: SWITCH POKEMON LOGIC
+                                break;
+                            case 3:
+                                game_state = STATE_GAME;
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
             }
@@ -121,6 +180,28 @@ void run_game() {
             SDL_Rect player_rect = {player.x - camera_x, player.y - camera_y, player.width, player.height };
             SDL_RenderCopy(renderer, player.sprite, NULL, &player_rect);
         }
+        else if(game_state == STATE_BATTLE) {
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // Blanc
+            SDL_RenderClear(renderer);
+
+            SDL_Rect player_pokemon_rect = {50, 400, 200, 200};  // Position et taille du sprite
+            SDL_Texture* first_pokemon_squad_sprite = load_character_sprite(player.squad[0].sprite, renderer);
+            SDL_RenderCopy(renderer, first_pokemon_squad_sprite, NULL, &player_pokemon_rect);
+
+            SDL_Rect wild_pokemon_rect = {550, 50, 200, 200};  // Position et taille du sprite
+            SDL_RenderCopy(renderer, wild_pokemon_texture, NULL, &wild_pokemon_rect);
+
+            draw_health_bar(renderer, 50, 370, 200, 20, (float) player.squad[0].current_pv / player.squad[0].total_pv);
+            render_text(renderer, font, player.squad[0].nom, BLACK_COLOR, 50, 560);
+
+            draw_health_bar(renderer, 550, 20, 200, 20, (float) wild_pokemon.current_pv / wild_pokemon.total_pv);
+            render_text(renderer, font, wild_pokemon.nom, BLACK_COLOR, 550, 210);
+
+            render_text(renderer, font, "Attaquer", battle_selected_option == 0 ? BLUE_COLOR : BLACK_COLOR, 400, 450);
+            render_text(renderer, font, "Sac", battle_selected_option == 1 ? BLUE_COLOR : BLACK_COLOR, 400, 480);
+            render_text(renderer, font, "Changer Pokemon", battle_selected_option == 2 ? BLUE_COLOR : BLACK_COLOR, 400, 510);
+            render_text(renderer, font, "Fuir", battle_selected_option == 3 ? BLUE_COLOR : BLACK_COLOR, 400, 540);
+        }
 
         SDL_RenderPresent(renderer);
         SDL_Delay(16);
@@ -137,4 +218,6 @@ void run_game() {
     TTF_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+
+    free_pokemons(pokemons, pokemon_count);
 }
