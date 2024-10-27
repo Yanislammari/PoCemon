@@ -205,14 +205,14 @@ void run_game() {
             SDL_RenderCopy(renderer, player.sprite, NULL, &player_rect);
         }
         else if(game_state == STATE_BATTLE) {
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // Blanc
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
             SDL_RenderClear(renderer);
 
-            SDL_Rect player_pokemon_rect = {50, 400, 200, 200};  // Position et taille du sprite
+            SDL_Rect player_pokemon_rect = {50, 400, 200, 200};
             SDL_Texture* first_pokemon_squad_sprite = load_character_sprite(player.squad[0].sprite, renderer);
             SDL_RenderCopy(renderer, first_pokemon_squad_sprite, NULL, &player_pokemon_rect);
 
-            SDL_Rect wild_pokemon_rect = {550, 50, 200, 200};  // Position et taille du sprite
+            SDL_Rect wild_pokemon_rect = {550, 50, 200, 200};
             SDL_RenderCopy(renderer, wild_pokemon_texture, NULL, &wild_pokemon_rect);
 
             draw_health_bar(renderer, 50, 370, 200, 20, (float) player.squad[0].current_pv / player.squad[0].total_pv);
