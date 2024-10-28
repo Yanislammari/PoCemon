@@ -1,7 +1,7 @@
 #ifndef POCEMON_POKEMON_H
 #define POCEMON_POKEMON_H
 
-typedef struct{
+typedef struct {
     int id;
     char* nom;
     int current_pv;

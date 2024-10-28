@@ -11,7 +11,7 @@ Pokemon* get_pokemons(int* count) {
     Pokemon* pokemons = malloc(sizeof(Pokemon) * 100);
     int index = 0;
 
-    while((sqlite3_step(stmt)) == SQLITE_ROW) {
+    while(sqlite3_step(stmt) == SQLITE_ROW) {
         int id = sqlite3_column_int(stmt, 0);
         char* nom = (char*) sqlite3_column_text(stmt, 1);
         int pv = sqlite3_column_int(stmt, 2);
